@@ -1,12 +1,13 @@
 {
   "name": "lol-champ-voting",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
   "homepage": "https://lolvoting.goddchen.de",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-inlinesvg": "^1.1.6",
     "react-scripts": "3.1.1",
     "reactstrap": "^8.0.1"
   },
