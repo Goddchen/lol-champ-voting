@@ -2,7 +2,7 @@
   "name": "lol-champ-voting",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://goddchen.github.io/lol-champ-voting",
+  "homepage": "https://lolvoting.goddchen.de",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "react": "^16.9.0",

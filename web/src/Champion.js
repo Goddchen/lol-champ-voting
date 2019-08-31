@@ -13,7 +13,7 @@ class Champion extends Component {
             <div>
                 <Card className="shadow-sm">
                     <CardHeader>{this.props.data.name}</CardHeader>
-                    <CardImg src={`http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.props.data.id}_0.jpg`} />
+                    <CardImg src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.props.data.id}_0.jpg`} />
                     <CardBody>
                         <CardText>
                             {this.props.votings} Votes
