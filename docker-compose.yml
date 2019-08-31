@@ -1,0 +1,12 @@
+version: "3"
+services:
+  web:
+    build: web
+    expose:
+      - "3000"
+    depends_on:
+      - api
+  api:
+    build: node
+    expose:
+      - "3000"
