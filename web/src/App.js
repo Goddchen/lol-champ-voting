@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'reactstrap'
 import Champion from './Champion'
 import championsJSON from './champions.json'
+import { config } from './config'
 
 class App extends Component {
 
@@ -19,7 +20,7 @@ class App extends Component {
 
   componentDidMount() {
     this.updateVotings()
-    fetch('http://localhost:3000/masteries')
+    fetch(`${config.apiUrl}/masteries`)
       .then(res => res.json())
       .then(data => {
         this.setState({
@@ -49,7 +50,7 @@ class App extends Component {
               .filter(champion => champion.mastery < 5)
               .map(champion =>
                 <Col className="col-12 col-sm-6 col-md-3 mb-3" key={champion.key}>
-                  <Champion data={champion} votings={champion.votings} mastery={champion.mastery} updateVotings={this.updateVotings}/>
+                  <Champion data={champion} votings={champion.votings} mastery={champion.mastery} updateVotings={this.updateVotings} />
                 </Col>
               )}
           </Row>
@@ -59,7 +60,7 @@ class App extends Component {
   }
 
   updateVotings() {
-    fetch('http://localhost:3000/votings')
+    fetch(`${config.apiUrl}/votings`)
       .then(res => res.json())
       .then(data => {
         this.setState({

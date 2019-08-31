@@ -5,6 +5,8 @@ var cors = require('cors')
 var app = express()
 var db = new sqlite.Database('db.sqlite3')
 
+const riotApiKey = process.env.RIOT_API_KEY
+
 db.run('CREATE TABLE IF NOT EXISTS voting (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, champion_id INTEGER NOT NULL, timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)');
 
 app.use(express.json())
@@ -45,7 +47,7 @@ app.post('/votings', function (req, res) {
 });
 
 app.get('/masteries', (req, res) => {
-    fetch('https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/tk5UJkDOn5ytCt9zV8JFg0WGrFzb-2ucVXa27UBrReZhMaI?api_key=RGAPI-7f78f0ce-76cf-44d7-aa3e-9958a7898360')
+    fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/tk5UJkDOn5ytCt9zV8JFg0WGrFzb-2ucVXa27UBrReZhMaI?api_key=${riotApiKey}`)
         .then(apiRes => apiRes.json())
         .then(masteries => {
             res.send(masteries.map((mastery => {
