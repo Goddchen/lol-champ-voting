@@ -30,7 +30,6 @@ class Champion extends Component {
     }
 
     submitVote() {
-        console.log(`Clicked ${this.props.data.key}`)
         fetch(`${config.apiUrl}/votings`,
             {
                 method: 'POST',
