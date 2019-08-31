@@ -1,11 +1,15 @@
-var express = require('express');
-var sqlite = require('sqlite3').verbose();
-var app = express();
-var db = new sqlite.Database('db.sqlite3');
+var express = require('express')
+var sqlite = require('sqlite3').verbose()
+var fetch = require('node-fetch')
+var cors = require('cors')
+var app = express()
+var db = new sqlite.Database('db.sqlite3')
 
 db.run('CREATE TABLE IF NOT EXISTS voting (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, champion_id INTEGER NOT NULL, timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)');
 
-app.use(express.json());
+app.use(express.json())
+app.use(cors())
+app.options('*', cors())
 
 app.get('/votings', function (req, res) {
     db.all('SELECT COUNT(*) AS count, champion_id FROM voting GROUP BY champion_id', (err, rows) => {
@@ -13,7 +17,6 @@ app.get('/votings', function (req, res) {
             console.error(err);
             res.sendStatus(500);
         } else {
-            res.setHeader('Access-Control-Allow-Origin', '*');
             res.send(rows);
         }
     });
@@ -21,7 +24,7 @@ app.get('/votings', function (req, res) {
 
 app.delete('/votings', (req, res) => {
     db.run('DELETE FROM voting', (err) => {
-        if(err) {
+        if (err) {
             console.error(err);
             res.sendStatus(500);
         } else {
@@ -39,6 +42,23 @@ app.post('/votings', function (req, res) {
             res.sendStatus(201);
         }
     });
+});
+
+app.get('/masteries', (req, res) => {
+    fetch('https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/tk5UJkDOn5ytCt9zV8JFg0WGrFzb-2ucVXa27UBrReZhMaI?api_key=RGAPI-7f78f0ce-76cf-44d7-aa3e-9958a7898360')
+        .then(apiRes => apiRes.json())
+        .then(masteries => {
+            res.send(masteries.map((mastery => {
+                return {
+                    champion_id: mastery.championId,
+                    mastery: mastery.championLevel
+                }
+            })))
+        })
+        .catch(err => {
+            console.error(err)
+            res.sendStatus(500)
+        });
 });
 
 app.listen(3000, function () {
