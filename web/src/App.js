@@ -48,7 +48,7 @@ class App extends Component {
               })
               .filter(champion => champion.mastery < 5)
               .map(champion =>
-                <Col xs="3" className="mb-3" key={champion.key}>
+                <Col className="col-12 col-sm-6 col-md-3 mb-3" key={champion.key}>
                   <Champion data={champion} votings={champion.votings} mastery={champion.mastery} updateVotings={this.updateVotings}/>
                 </Col>
               )}
