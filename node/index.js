@@ -7,21 +7,19 @@ db.run('CREATE TABLE IF NOT EXISTS voting (id INTEGER NOT NULL PRIMARY KEY AUTOI
 
 app.use(express.json());
 
-app.get('/', function (req, res) {
-    db.get('SELECT COUNT(*) AS count FROM voting', (err, row) => {
+app.get('/votings', function (req, res) {
+    db.all('SELECT COUNT(*) AS count, champion_id FROM voting GROUP BY champion_id', (err, rows) => {
         if (err) {
             console.error(err);
             res.sendStatus(500);
         } else {
             res.setHeader('Access-Control-Allow-Origin', '*');
-            res.send({
-                count: row.count
-            });
+            res.send(rows);
         }
     });
 });
 
-app.delete('/', (req, res) => {
+app.delete('/votings', (req, res) => {
     db.run('DELETE FROM voting', (err) => {
         if(err) {
             console.error(err);
@@ -32,7 +30,7 @@ app.delete('/', (req, res) => {
     });
 });
 
-app.post('/', function (req, res) {
+app.post('/votings', function (req, res) {
     db.run('INSERT INTO voting (champion_id) VALUES (?)', [req.body.champion_id], (err) => {
         if (err) {
             console.error(err);
