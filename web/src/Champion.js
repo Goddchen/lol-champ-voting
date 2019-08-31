@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Card, CardBody, CardText, CardHeader, CardImg, Button } from 'reactstrap'
+import { config } from './config'
 
 class Champion extends Component {
 
@@ -30,7 +31,7 @@ class Champion extends Component {
 
     submitVote() {
         console.log(`Clicked ${this.props.data.key}`)
-        fetch('http://localhost:3000/votings',
+        fetch(`${config.apiUrl}/votings`,
             {
                 method: 'POST',
                 body: JSON.stringify({ champion_id: this.props.data.key }),
