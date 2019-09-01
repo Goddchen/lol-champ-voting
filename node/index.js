@@ -41,7 +41,7 @@ app.post('/votings', function (req, res) {
     if (ip.includes('::ffff:')) {
         ip = ip.split(':').reverse()[0]
     }
-    db.get('SELECT COUNT(*) AS count FROM voting WHERE ip=?', [ip], (err, row) => {
+    db.get('SELECT COUNT(*) AS count FROM voting WHERE ip=? AND champion_id=?', [ip, req.body.champion_id], (err, row) => {
         if (err) console.error(err.message)
         var count = row.count
         if (count == 0) {
