@@ -1,0 +1,120 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "LoL Champ Voting API",
+        "version": "1.1.1"
+    },
+    "servers": [
+        {
+            "url": "https://api.lolvoting.goddchen.de/"
+        }
+    ],
+    "tags": [
+        {
+            "name": "votings"
+        },
+        {
+            "name": "masteries"
+        }
+    ],
+    "paths": {
+        "/votings": {
+            "get": {
+                "tags": [
+                    "votings"
+                ],
+                "summary": "Get all votings",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "count": {
+                                                "type": "integer"
+                                            },
+                                            "champion_id": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Submit a vote",
+                "tags": [
+                    "votings"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "champion_id": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "!!! DONT'T USE IN PRODUCTION !!!",
+                "description": "Clear all votings. Don't use in production!!!",
+                "tags": [
+                    "votings"
+                ],
+                "responses": {
+                    "502": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/masteries": {
+            "get": {
+                "description": "Get all champion masteries for Goddchen on EUW",
+                "tags": [
+                    "masteries"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "champion_id": {
+                                                "type": "integer"
+                                            },
+                                            "mastery": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
