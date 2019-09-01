@@ -1,0 +1,1 @@
+ALTER TABLE voting ADD COLUMN ip TEXT;

@@ -9,6 +9,7 @@ const riotApiKey = process.env.RIOT_API_KEY
 
 db.run('CREATE TABLE IF NOT EXISTS voting (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, champion_id INTEGER NOT NULL, timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)');
 
+app.enable('trust proxy')
 app.use(express.json())
 app.use(cors())
 app.options('*', cors())
@@ -36,14 +37,26 @@ app.delete('/votings', (req, res) => {
 });
 
 app.post('/votings', function (req, res) {
-    db.run('INSERT INTO voting (champion_id) VALUES (?)', [req.body.champion_id], (err) => {
-        if (err) {
-            console.error(err);
-            res.sendStatus(500);
+    var ip = req.ip
+    if (ip.includes('::ffff:')) {
+        ip = ip.split(':').reverse()[0]
+    }
+    db.get('SELECT COUNT(*) AS count FROM voting WHERE ip=?', [ip], (err, row) => {
+        if (err) console.error(err.message)
+        var count = row.count
+        if (count == 0) {
+            db.run('INSERT INTO voting (champion_id, ip) VALUES (?, ?)', [req.body.champion_id, ip], (err) => {
+                if (err) {
+                    console.error(err);
+                    res.sendStatus(500);
+                } else {
+                    res.sendStatus(201);
+                }
+            });
         } else {
-            res.sendStatus(201);
+            res.sendStatus(429)
         }
-    });
+    })
 });
 
 app.get('/masteries', (req, res) => {
