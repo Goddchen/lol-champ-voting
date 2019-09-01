@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Card, CardBody, CardText, CardHeader, CardImg, Button } from 'reactstrap'
 import { config } from './config'
+import ColorHash from 'color-hash'
 
 class Champion extends Component {
 
@@ -13,7 +14,7 @@ class Champion extends Component {
         return (
             <div>
                 <Card className="shadow-sm">
-                    <CardHeader>{this.props.data.name}</CardHeader>
+                    <CardHeader style={this.props.coloredHeaders || false ? {backgroundColor: new ColorHash({lightness: 0.8}).hex(this.props.data.key)} : null}>{this.props.data.name}</CardHeader>
                     <CardImg src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.props.data.id}_0.jpg`} />
                     <CardBody>
                         <CardText>
