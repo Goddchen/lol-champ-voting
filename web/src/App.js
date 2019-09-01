@@ -3,10 +3,12 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'reactstrap'
 import SVG from 'react-inlinesvg'
+import { Doughnut } from "react-chartjs-2";
+import ColorHash from 'color-hash'
 import Champion from './Champion'
 import championsJSON from './champions.json'
 import { config } from './config'
-import {version} from '../package.json'
+import { version } from '../package.json'
 
 class App extends Component {
 
@@ -45,6 +47,56 @@ class App extends Component {
         <h1 className="text-center">Which champ should I level to level 5 next?</h1>
         <p className="text-center">I'll be playing only the most voted champ in normal games until level 5 is reached.</p>
         <Container>
+          {
+            this.state.votings.length > 0 ? <Row className="mb-3">
+              <Col>
+                <Doughnut data={
+                  {
+                    labels: this.state.votings
+                      .sort((v1, v2) => v2.count - v1.count)
+                      .map(voting => this.state.champions
+                        .find(champion => parseInt(voting.champion_id) === parseInt(champion.key)))
+                      .filter(champion => champion != null)
+                      .map(champion => champion.name),
+                    datasets: [
+                      {
+                        data: this.state.votings
+                          .sort((v1, v2) => v2.count - v1.count)
+                          .map(voting => voting.count),
+                        backgroundColor: this.state.votings
+                          .sort((v1, v2) => v2.count - v1.count)
+                          .map(voting => new ColorHash().hex(voting.champion_id))
+                      }
+                    ]
+                  }
+                } height={100} options={{maintainAspectRatio: false}}/>
+              </Col>
+            </Row> : null
+          }
+          {
+            this.state.votings.length > 0 ?
+              <Row className="mb-3">
+                <Col className="col-12 col-sm-12 col-md-6 offset-0 offset-sm-0 offset-md-3">
+                  <p className="text-center"><span>I will be playing </span>
+                  {this.state.votings
+                    .sort((v1, v2) => v2.count - v1.count)
+                    .map(voting => this.state.champions.find(champion => parseInt(champion.key) === parseInt(voting.champion_id)))
+                    .filter(champion => champion != null)
+                    .values().next().value.name}
+                  <span>. Current level: </span>
+                  {this.state.masteries != null && this.state.masteries.length > 0 ? this.state.votings
+                    .sort((v1, v2) => v2.count - v1.count)
+                    .map(voting => (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id)) || { mastery: 0 }).mastery)
+                    .values().next().value : 0}
+                  .</p>
+                  <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.state.votings
+                    .sort((v1, v2) => v2.count - v1.count)
+                    .map(voting => this.state.champions.find(champion => parseInt(champion.key) === parseInt(voting.champion_id)))
+                    .filter(champion => champion != null)
+                    .values().next().value.id}_0.jpg`} className="w-100" alt="" />
+                </Col>
+              </Row> : null
+          }
           <Row>
             {this.state.champions
               .map(champion => {
@@ -65,10 +117,10 @@ class App extends Component {
           </Row>
           <Row>
             <Col>
-                <p className="text-center">
-                  Version: {version}<br/>
-                  Total #votings: {this.state.votings.map(voting => parseInt(voting.count)).reduce((prev, curr) => prev + curr, 0)}
-                </p>
+              <p className="text-center">
+                Version: {version}<br />
+                Total #votings: {this.state.votings.map(voting => parseInt(voting.count)).reduce((prev, curr) => prev + curr, 0)}
+              </p>
             </Col>
           </Row>
         </Container>
