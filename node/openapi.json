@@ -48,7 +48,7 @@
                 }
             },
             "post": {
-                "description": "Submit a vote",
+                "summary": "Submit a vote",
                 "tags": [
                     "votings"
                 ],
@@ -80,7 +80,7 @@
                     "votings"
                 ],
                 "responses": {
-                    "502": {
+                    "202": {
                         "description": "OK"
                     }
                 }
@@ -88,7 +88,7 @@
         },
         "/masteries": {
             "get": {
-                "description": "Get all champion masteries for Goddchen on EUW",
+                "summary": "Get all champion masteries for Goddchen on EUW",
                 "tags": [
                     "masteries"
                 ],
