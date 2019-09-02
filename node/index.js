@@ -2,6 +2,7 @@ var express = require('express')
 var sqlite = require('sqlite3').verbose()
 var fetch = require('node-fetch')
 var cors = require('cors')
+var basicAuth = require('express-basic-auth')
 var app = express()
 var db = new sqlite.Database('db.sqlite3')
 
@@ -25,16 +26,21 @@ app.get('/votings', function (req, res) {
     });
 });
 
-app.delete('/votings', (req, res) => {
-    db.run('DELETE FROM voting', (err) => {
-        if (err) {
-            console.error(err);
-            res.sendStatus(500);
-        } else {
-            res.sendStatus(202);
+app.delete('/votings',
+    basicAuth({
+        users: {
+            'admin': 'so-super-secret'
         }
+    }), (req, res) => {
+        db.run('DELETE FROM voting', (err) => {
+            if (err) {
+                console.error(err);
+                res.sendStatus(500);
+            } else {
+                res.sendStatus(202);
+            }
+        });
     });
-});
 
 app.post('/votings', function (req, res) {
     var ip = req.ip
