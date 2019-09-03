@@ -3,6 +3,7 @@ var sqlite = require('sqlite3').verbose()
 var fetch = require('node-fetch')
 var cors = require('cors')
 var basicAuth = require('express-basic-auth')
+var swaggerUi = require('swagger-ui-express')
 var app = express()
 var db = new sqlite.Database('db.sqlite3')
 
@@ -14,6 +15,8 @@ app.enable('trust proxy')
 app.use(express.json())
 app.use(cors())
 app.options('*', cors())
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(require('./openapi.json')))
 
 app.get('/votings', function (req, res) {
     db.all('SELECT COUNT(*) AS count, champion_id FROM voting GROUP BY champion_id', (err, rows) => {
