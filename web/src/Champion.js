@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, CardBody, CardText, CardHeader, CardImg, Button } from 'reactstrap'
+import { Card, CardBody, CardText, CardHeader, CardImg, Button, Toast, ToastHeader, ToastBody, Spinner } from 'reactstrap'
 import { config } from './config'
 import ColorHash from 'color-hash'
 
@@ -7,6 +7,12 @@ class Champion extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            errorToastVisible: false,
+            errorToastHeader: "Header",
+            errorToastBody: "Body",
+            isLoading: false
+        }
         this.submitVote = this.submitVote.bind(this)
     }
 
@@ -14,7 +20,7 @@ class Champion extends Component {
         return (
             <div>
                 <Card className="shadow-sm">
-                    <CardHeader style={this.props.coloredHeaders || false ? {backgroundColor: new ColorHash({lightness: 0.8}).hex(this.props.data.key)} : null}>{this.props.data.name}</CardHeader>
+                    <CardHeader style={this.props.coloredHeaders || false ? { backgroundColor: new ColorHash({ lightness: 0.8 }).hex(this.props.data.key) } : null}>{this.props.data.name}</CardHeader>
                     <CardImg src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.props.data.id}_0.jpg`} />
                     <CardBody>
                         <CardText>
@@ -23,14 +29,21 @@ class Champion extends Component {
                         <CardText>
                             Current Level: {this.props.mastery}
                         </CardText>
-                        <Button className="w-100" onClick={this.submitVote}>Vote</Button>
+                        <Button className="w-100" onClick={this.submitVote}>{this.state.isLoading ? <Spinner size="sm" /> : "Vote"}</Button>
                     </CardBody>
                 </Card>
+                <Toast isOpen={this.state.errorToastVisible}>
+                    <ToastHeader icon="danger">{this.state.errorToastHeader}</ToastHeader>
+                    <ToastBody>{this.state.errorToastBody}</ToastBody>
+                </Toast>
             </div>
         )
     }
 
     submitVote() {
+        this.setState({
+            isLoading: true
+        })
         fetch(`${config.apiUrl}/votings`,
             {
                 method: 'POST',
@@ -40,8 +53,23 @@ class Champion extends Component {
                 }
             }
         )
-            .then(_ => this.props.updateVotings())
-            .catch(console.error)
+            .then(res => {
+                if (res.status === 429) {
+                    this.setState({
+                        errorToastVisible: true,
+                        errorToastHeader: "Nope!",
+                        errorToastBody: "You can only submit 1 vote each champ, no cheating!"
+                    }, () => window.setTimeout(() => this.setState({ errorToastVisible: false }), 3000))
+                } else if (res.ok) {
+                    this.props.updateVotings()
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => this.setState({
+                isLoading: false
+            }))
     }
 };
 
