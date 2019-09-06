@@ -38,4 +38,4 @@ services:
     restart: always
     labels:
       com.centurylinklabs.watchtower.enable: "true"
-    command: --debug --label-enable --cleanup --interval 60
+    command: --debug --label-enable --cleanup --include-stopped --interval 60

@@ -79,7 +79,7 @@
                 }
             },
             "delete": {
-                "summary": "!!! DONT'T USE IN PRODUCTION !!!",
+                "summary": "Clear all votings",
                 "description": "Clear all votings. Don't use in production!!!",
                 "tags": [
                     "votings"
