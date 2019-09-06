@@ -41,6 +41,8 @@ class Champion extends Component {
     }
 
     submitVote() {
+        var _paq = window._paq || [];
+        _paq.push(['trackEvent', 'Voting', 'Vote', this.props.data.key])
         this.setState({
             isLoading: true
         })
