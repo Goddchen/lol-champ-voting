@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import './App.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { Container, Row, Col } from 'reactstrap'
-import SVG from 'react-inlinesvg'
-import { Doughnut } from "react-chartjs-2";
-import ColorHash from 'color-hash'
 import Champion from './Champion'
+import GitHubBadge from "./GitHubBadge"
+import Chart from "./Chart"
+import CurrentWinner from "./CurrentWinner"
 import championsJSON from './champions.json'
 import { config } from './config'
 import { version } from '../package.json'
@@ -37,39 +37,14 @@ class App extends Component {
   render() {
     return (
       <div className="p-3">
-        <a href="https://github.com/Goddchen/lol-champ-voting/" target="_blank" rel="noopener noreferrer">
-          <SVG src='<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 250 250" fill="#ffffff" style="position: absolute; top: 0; right: 0"> \
-                      <path d="M0 0l115 115h15l12 27 108 108V0z" fill="#000000"/> \
-                      <path class="octo-arm" d="M128 109c-15-9-9-19-9-19 3-7 2-11 2-11-1-7 3-2 3-2 4 5 2 11 2 11-3 10 5 15 9 16" style="-webkit-transform-origin: 130px 106px; transform-origin: 130px 106px"/> \
-                      <path class="octo-body" d="M115 115s4 2 5 0l14-14c3-2 6-3 8-3-8-11-15-24 2-41 5-5 10-7 16-7 1-2 3-7 12-11 0 0 5 3 7 16 4 2 8 5 12 9s7 8 9 12c14 3 17 7 17 7-4 8-9 11-11 11 0 6-2 11-7 16-16 16-30 10-41 2 0 3-1 7-5 11l-12 11c-1 1 1 5 1 5z"/> \
-                    </svg>' />
-        </a>
+        <GitHubBadge />
         <h1 className="text-center">Which champ should I level to level 5 next?</h1>
         <p className="text-center">I'll be playing only the most voted champ in normal games until level 5 is reached.</p>
         <Container>
           {
             this.state.votings.length > 0 ? <Row className="mb-3">
               <Col>
-                <Doughnut data={
-                  {
-                    labels: this.state.votings
-                      .sort((v1, v2) => v2.count - v1.count)
-                      .map(voting => this.state.champions
-                        .find(champion => parseInt(voting.champion_id) === parseInt(champion.key)))
-                      .filter(champion => champion != null)
-                      .map(champion => champion.name),
-                    datasets: [
-                      {
-                        data: this.state.votings
-                          .sort((v1, v2) => v2.count - v1.count)
-                          .map(voting => voting.count),
-                        backgroundColor: this.state.votings
-                          .sort((v1, v2) => v2.count - v1.count)
-                          .map(voting => new ColorHash().hex(voting.champion_id))
-                      }
-                    ]
-                  }
-                } height={100} options={{maintainAspectRatio: false}}/>
+                <Chart votings={this.state.votings} champions={this.state.champions} />
               </Col>
             </Row> : null
           }
@@ -77,23 +52,7 @@ class App extends Component {
             this.state.votings.length > 0 ?
               <Row className="mb-3">
                 <Col className="col-12 col-sm-12 col-md-6 offset-0 offset-sm-0 offset-md-3">
-                  <p className="text-center"><span>I will be playing </span>
-                  {this.state.votings
-                    .sort((v1, v2) => v2.count - v1.count)
-                    .map(voting => this.state.champions.find(champion => parseInt(champion.key) === parseInt(voting.champion_id)))
-                    .filter(champion => champion != null)
-                    .values().next().value.name}
-                  <span>. Current level: </span>
-                  {this.state.masteries != null && this.state.masteries.length > 0 ? this.state.votings
-                    .sort((v1, v2) => v2.count - v1.count)
-                    .map(voting => (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id)) || { mastery: 0 }).mastery)
-                    .values().next().value : 0}
-                  .</p>
-                  <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${this.state.votings
-                    .sort((v1, v2) => v2.count - v1.count)
-                    .map(voting => this.state.champions.find(champion => parseInt(champion.key) === parseInt(voting.champion_id)))
-                    .filter(champion => champion != null)
-                    .values().next().value.id}_0.jpg`} className="w-100" alt="" />
+                  <CurrentWinner votings={this.state.votings} champions={this.state.champions} masteries={this.state.masteries} />
                 </Col>
               </Row> : null
           }
