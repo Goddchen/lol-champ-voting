@@ -12,7 +12,8 @@ class Chart extends Component {
                     .map(voting => this.props.champions
                       .find(champion => parseInt(voting.champion_id) === parseInt(champion.key)))
                     .filter(champion => champion != null)
-                    .map(champion => champion.name),
+                    .map(champion => champion.name)
+                    .slice(0, 5),
                   datasets: [
                     {
                       data: this.props.votings
@@ -24,7 +25,7 @@ class Chart extends Component {
                     }
                   ]
                 }
-              } height={100} options={{maintainAspectRatio: false}}/>
+              } height={200} options={{maintainAspectRatio: false}}/>
         )
     }
 }
