@@ -31,7 +31,12 @@ class App extends Component {
           masteries: data
         })
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err)
+        this.setState({
+          masteries: null
+        })
+      })
   }
 
   render() {
@@ -60,7 +65,7 @@ class App extends Component {
             {this.state.champions
               .map(champion => {
                 champion.votings = (this.state.votings.find(voting => parseInt(voting.champion_id) === parseInt(champion.key)) || { count: 0 }).count
-                champion.mastery = (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(champion.key)) || { mastery: 0 }).mastery
+                champion.mastery = this.state.masteries === null ? -1 : (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(champion.key)) || { mastery: 0 }).mastery
                 return champion
               })
               .sort((c1, c2) => {

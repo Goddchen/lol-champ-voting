@@ -26,9 +26,12 @@ class Champion extends Component {
                         <CardText>
                             {this.props.votings} Votes
                         </CardText>
-                        <CardText>
-                            Current Level: {this.props.mastery}
-                        </CardText>
+                        {
+                            this.props.mastery !== -1 &&
+                            <CardText>
+                                Current Level: {this.props.mastery}
+                            </CardText>
+                        }
                         <Button className="w-100" onClick={this.submitVote}>{this.state.isLoading ? <Spinner size="sm" /> : "Vote"}</Button>
                     </CardBody>
                 </Card>
