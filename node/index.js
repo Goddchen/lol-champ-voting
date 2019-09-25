@@ -9,8 +9,6 @@ var db = new sqlite.Database('db.sqlite3')
 
 const riotApiKey = process.env.RIOT_API_KEY
 
-db.run('CREATE TABLE IF NOT EXISTS voting (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, champion_id INTEGER NOT NULL, timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)');
-
 app.enable('trust proxy')
 app.use(express.json())
 app.use(cors())
@@ -69,7 +67,11 @@ app.post('/votings', function (req, res) {
 });
 
 app.get('/masteries', (req, res) => {
-    fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/tk5UJkDOn5ytCt9zV8JFg0WGrFzb-2ucVXa27UBrReZhMaI?api_key=${riotApiKey}`)
+    fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/Goddchen?api_key=${riotApiKey}`)
+        .then(apiRes => apiRes.json())
+        .then(userInfo => userInfo.id)
+        .then(encryptedSummonerId => 
+            fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${encryptedSummonerId}?api_key=${riotApiKey}`))
         .then(apiRes => apiRes.json())
         .then(masteries => {
             res.send(masteries.map((mastery => {
