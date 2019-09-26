@@ -3,6 +3,11 @@ import React, { Component } from "react";
 class CurrentWinner extends Component {
     render() {
         var topVotedChamp = this.props.votings
+            .filter(voting => {
+                var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
+                var mastery = champion ? champion.mastery : 0
+                return mastery < 5
+            })
             .sort((v1, v2) => v2.count - v1.count)
             .map(voting => this.props.champions.find(champion => parseInt(champion.key) === parseInt(voting.champion_id)))
             .filter(champion => champion != null)

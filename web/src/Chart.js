@@ -8,6 +8,11 @@ class Chart extends Component {
       <Doughnut data={
         {
           labels: this.props.votings
+            .filter(voting => {
+              var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
+              var mastery = champion ? champion.mastery : 0
+              return mastery < 5
+            })
             .sort((v1, v2) => v2.count - v1.count)
             .map(voting => this.props.champions
               .find(champion => parseInt(voting.champion_id) === parseInt(champion.key)))
@@ -17,9 +22,19 @@ class Chart extends Component {
           datasets: [
             {
               data: this.props.votings
+                .filter(voting => {
+                  var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
+                  var mastery = champion ? champion.mastery : 0
+                  return mastery < 5
+                })
                 .sort((v1, v2) => v2.count - v1.count)
                 .map(voting => voting.count),
               backgroundColor: this.props.votings
+                .filter(voting => {
+                  var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
+                  var mastery = champion ? champion.mastery : 0
+                  return mastery < 5
+                })
                 .sort((v1, v2) => v2.count - v1.count)
                 .map(voting => new ColorHash().hex(voting.champion_id))
             }
@@ -29,7 +44,7 @@ class Chart extends Component {
         maintainAspectRatio: false,
         legend: {
           labels: {
-            filter: (legendItem, data) => legendItem.index < 5
+            filter: (legendItem, _) => legendItem.index < 5
           }
         }
       }} />

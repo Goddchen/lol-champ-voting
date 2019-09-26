@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Row, Col } from 'reactstrap'
+import { Container, Row, Col, Spinner } from 'reactstrap'
 import Champion from './Champion'
 import GitHubBadge from "./GitHubBadge"
 import Chart from "./Chart"
@@ -40,56 +40,70 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="p-3">
-        <GitHubBadge />
-        <h1 className="text-center">Which champ should I level to level 5 next?</h1>
-        <p className="text-center">I'll be playing only the most voted champ in normal games until level 5 is reached.</p>
-        <Container>
-          {
-            this.state.votings.length > 0 ? <Row className="mb-3">
-              <Col>
-                <Chart votings={this.state.votings} champions={this.state.champions} />
-              </Col>
-            </Row> : null
-          }
-          {
-            this.state.votings.length > 0 ?
-              <Row className="mb-3">
-                <Col className="col-12 col-sm-12 col-md-6 offset-0 offset-sm-0 offset-md-3">
-                  <CurrentWinner votings={this.state.votings} champions={this.state.champions} masteries={this.state.masteries} />
+    if (this.state.masteries === null || this.state.votings === null) {
+      return (
+        <div className="p-3 d-flex justify-content-center">
+          Error loading page :/
+        </div>
+      )
+    } else if (this.state.masteries.length === 0 || this.state.votings.length === 0) {
+      return (
+        <div className="p-3 d-flex justify-content-center">
+          <Spinner />
+        </div>
+      )
+    } else {
+      return (
+        <div className="p-3">
+          <GitHubBadge />
+          <h1 className="text-center">Which champ should I level to level 5 next?</h1>
+          <p className="text-center">I'll be playing only the most voted champ in normal games until level 5 is reached.</p>
+          <Container>
+            {
+              this.state.votings.length > 0 ? <Row className="mb-3">
+                <Col>
+                  <Chart votings={this.state.votings} champions={this.state.champions} masteries={this.state.masteries} />
                 </Col>
               </Row> : null
-          }
-          <Row>
-            {this.state.champions
-              .map(champion => {
-                champion.votings = (this.state.votings.find(voting => parseInt(voting.champion_id) === parseInt(champion.key)) || { count: 0 }).count
-                champion.mastery = this.state.masteries === null ? -1 : (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(champion.key)) || { mastery: 0 }).mastery
-                return champion
-              })
-              .sort((c1, c2) => {
-                if (c1.votings !== c2.votings) return -(c1.votings - c2.votings)
-                return c1.name - c2.name
-              })
-              .filter(champion => champion.mastery < 5)
-              .map(champion =>
-                <Col className="col-12 col-sm-6 col-md-3 mb-3" key={champion.key}>
-                  <Champion data={champion} votings={champion.votings} mastery={champion.mastery} updateVotings={this.updateVotings} />
-                </Col>
-              )}
-          </Row>
-          <Row>
-            <Col>
-              <p className="text-center">
-                Version: {version}<br />
-                Total #votings: {this.state.votings.map(voting => parseInt(voting.count)).reduce((prev, curr) => prev + curr, 0)}
-              </p>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
+            }
+            {
+              this.state.votings.length > 0 ?
+                <Row className="mb-3">
+                  <Col className="col-12 col-sm-12 col-md-6 offset-0 offset-sm-0 offset-md-3">
+                    <CurrentWinner votings={this.state.votings} champions={this.state.champions} masteries={this.state.masteries} />
+                  </Col>
+                </Row> : null
+            }
+            <Row>
+              {this.state.champions
+                .map(champion => {
+                  champion.votings = (this.state.votings.find(voting => parseInt(voting.champion_id) === parseInt(champion.key)) || { count: 0 }).count
+                  champion.mastery = this.state.masteries === null ? -1 : (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(champion.key)) || { mastery: 0 }).mastery
+                  return champion
+                })
+                .filter(champion => champion.mastery < 5)
+                .sort((c1, c2) => {
+                  if (c1.votings !== c2.votings) return -(c1.votings - c2.votings)
+                  return c1.name - c2.name
+                })
+                .map(champion =>
+                  <Col className="col-12 col-sm-6 col-md-3 mb-3" key={champion.key}>
+                    <Champion data={champion} votings={champion.votings} mastery={champion.mastery} updateVotings={this.updateVotings} />
+                  </Col>
+                )}
+            </Row>
+            <Row>
+              <Col>
+                <p className="text-center">
+                  Version: {version}<br />
+                  Total #votings: {this.state.votings.map(voting => parseInt(voting.count)).reduce((prev, curr) => prev + curr, 0)}
+                </p>
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      );
+    }
   }
 
   updateVotings() {
