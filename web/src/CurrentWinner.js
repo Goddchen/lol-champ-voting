@@ -1,24 +1,15 @@
 import React, { Component } from "react";
+import { getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc } from "./utils.js";
 
 class CurrentWinner extends Component {
     render() {
-        var topVotedChamp = this.props.votings
-            .filter(voting => {
-                var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
-                var mastery = champion ? champion.mastery : 0
-                return mastery < 5
-            })
-            .sort((v1, v2) => v2.count - v1.count)
-            .map(voting => this.props.champions.find(champion => parseInt(champion.key) === parseInt(voting.champion_id)))
-            .filter(champion => champion != null)
-            .values().next().value
-        var topVotedMastery = this.props.masteries != null ? this.props.masteries
-            .find(mastery => parseInt(mastery.champion_id) === parseInt(topVotedChamp.key)) : null
+        var topVotedChamp =
+            getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc(this.props.champions, this.props.votings, this.props.masteries)
+                .values().next().value
         return (
             <div>
                 <p className="text-center">
-                    <span>I will be playing {topVotedChamp.name}.</span>
-                    {topVotedMastery != null && <span> Current level: {topVotedMastery.mastery}</span>}
+                    I will be playing {topVotedChamp.name}. Current level: {topVotedChamp.mastery}.
                 </p>
                 <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${topVotedChamp.id}_0.jpg`} className="w-100" alt="" />
             </div>

@@ -9,6 +9,7 @@ import CurrentWinner from "./CurrentWinner"
 import championsJSON from './champions.json'
 import { config } from './config'
 import { version } from '../package.json'
+import { getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc } from "./utils.js";
 
 class App extends Component {
 
@@ -75,17 +76,7 @@ class App extends Component {
                 </Row> : null
             }
             <Row>
-              {this.state.champions
-                .map(champion => {
-                  champion.votings = (this.state.votings.find(voting => parseInt(voting.champion_id) === parseInt(champion.key)) || { count: 0 }).count
-                  champion.mastery = this.state.masteries === null ? -1 : (this.state.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(champion.key)) || { mastery: 0 }).mastery
-                  return champion
-                })
-                .filter(champion => champion.mastery < 5)
-                .sort((c1, c2) => {
-                  if (c1.votings !== c2.votings) return -(c1.votings - c2.votings)
-                  return c1.name - c2.name
-                })
+              {getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc(this.state.champions, this.state.votings, this.state.masteries)
                 .map(champion =>
                   <Col className="col-12 col-sm-6 col-md-3 mb-3" key={champion.key}>
                     <Champion data={champion} votings={champion.votings} mastery={champion.mastery} updateVotings={this.updateVotings} />

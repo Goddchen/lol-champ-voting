@@ -1,42 +1,24 @@
 import React, { Component } from "react";
 import { Doughnut } from "react-chartjs-2";
 import ColorHash from 'color-hash'
+import { getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc } from "./utils.js";
 
 class Chart extends Component {
   render() {
     return (
       <Doughnut data={
         {
-          labels: this.props.votings
-            .filter(voting => {
-              var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
-              var mastery = champion ? champion.mastery : 0
-              return mastery < 5
-            })
-            .sort((v1, v2) => v2.count - v1.count)
-            .map(voting => this.props.champions
-              .find(champion => parseInt(voting.champion_id) === parseInt(champion.key)))
-            .filter(champion => champion != null)
-            .map(champion => champion.name),
-          //.slice(0, 5),
+          labels:
+            getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc(this.props.champions, this.props.votings, this.props.masteries)
+              .map(champion => champion.name),
           datasets: [
             {
-              data: this.props.votings
-                .filter(voting => {
-                  var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
-                  var mastery = champion ? champion.mastery : 0
-                  return mastery < 5
-                })
-                .sort((v1, v2) => v2.count - v1.count)
-                .map(voting => voting.count),
-              backgroundColor: this.props.votings
-                .filter(voting => {
-                  var champion = this.props.masteries.find(mastery => parseInt(mastery.champion_id) === parseInt(voting.champion_id))
-                  var mastery = champion ? champion.mastery : 0
-                  return mastery < 5
-                })
-                .sort((v1, v2) => v2.count - v1.count)
-                .map(voting => new ColorHash().hex(voting.champion_id))
+              data:
+                getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc(this.props.champions, this.props.votings, this.props.masteries)
+                  .map(champion => champion.votings),
+              backgroundColor:
+                getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc(this.props.champions, this.props.votings, this.props.masteries)
+                  .map(champion => new ColorHash().hex(champion.key))
             }
           ]
         }
