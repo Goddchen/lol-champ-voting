@@ -1,6 +1,6 @@
 {
   "name": "node",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
-    "node-fetch": "^2.6.0",
-    "sqlite3": "^4.1.0",
-    "swagger-ui-express": "^4.0.7"
+    "node-fetch": "^2.6.1",
+    "sqlite3": "^5.0.0",
+    "swagger-ui-express": "^4.1.4"
   }
 }
