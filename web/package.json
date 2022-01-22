@@ -4,15 +4,15 @@
   "private": true,
   "homepage": "https://lolvoting.goddchen.de",
   "dependencies": {
-    "bootstrap": "^4.5.2",
-    "chart.js": "^2.9.3",
-    "color-hash": "^1.0.3",
-    "react": "^16.13.1",
-    "react-chartjs-2": "^2.10.0",
-    "react-dom": "^16.9.0",
-    "react-inlinesvg": "^2.1.1",
+    "bootstrap": "^4.6.1",
+    "chart.js": "^2.9.4",
+    "color-hash": "^1.1.1",
+    "react": "^16.14.0",
+    "react-chartjs-2": "^2.11.2",
+    "react-dom": "^16.14.0",
+    "react-inlinesvg": "^2.3.0",
     "react-scripts": "3.4.3",
-    "reactstrap": "^8.6.0"
+    "reactstrap": "^8.10.1"
   },
   "scripts": {
     "start": "react-scripts start",
