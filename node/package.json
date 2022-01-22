@@ -9,10 +9,10 @@
   "author": "Goddchen",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-basic-auth": "^1.2.0",
+    "express": "^4.17.2",
+    "express-basic-auth": "^1.2.1",
     "node-fetch": "^2.6.7",
-    "sqlite3": "^5.0.0",
-    "swagger-ui-express": "^4.1.4"
+    "sqlite3": "^5.0.2",
+    "swagger-ui-express": "^4.3.0"
   }
 }
