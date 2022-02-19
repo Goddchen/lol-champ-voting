@@ -11,9 +11,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - id: git_tag
+        run: echo ::set-output name=GIT_TAG::${GITHUB_REF:14}
+        shell: bash
       - uses: docker/build-push-action@v2
         with:
           context: web/
           file: web/Dockerfile
           push: true
-          tags: goddchen/lol-champ-voting:latest,goddchen/lol-champ-voting:${GITHUB_REF:10}
+          tags: goddchen/lol-champ-voting:latest,goddchen/lol-champ-voting:${{ steps.git_tag.outputs.GIT_TAG }}
