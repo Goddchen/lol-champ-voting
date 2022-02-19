@@ -17,6 +17,5 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: "{{defaultContext}}:web"
-          file: web/Dockerfile
           push: true
           tags: goddchen/lol-champ-voting:latest,goddchen/lol-champ-voting:${{ steps.git_tag.outputs.GIT_TAG }}
