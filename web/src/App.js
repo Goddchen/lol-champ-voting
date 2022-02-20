@@ -8,7 +8,7 @@ import Chart from "./Chart"
 import CurrentWinner from "./CurrentWinner"
 import championsJSON from './champions.json'
 import { config } from './config'
-import { version } from '../package.json'
+import packageInfo from '../package.json'
 import { getOnlyChampsBelowLevel5SortedByVotingDescSortedByNameAsc } from "./utils.js";
 
 class App extends Component {
@@ -86,7 +86,7 @@ class App extends Component {
             <Row>
               <Col>
                 <p className="text-center">
-                  Version: {version}<br />
+                  Version: {packageInfo.version}<br />
                   Total #votings: {this.state.votings.map(voting => parseInt(voting.count)).reduce((prev, curr) => prev + curr, 0)}
                 </p>
               </Col>
