@@ -16,6 +16,6 @@ jobs:
         shell: bash
       - uses: docker/build-push-action@v2
         with:
-          context: "{{defaultContext}}:api"
+          context: "{{defaultContext}}:node"
           push: true
           tags: goddchen/lol-champ-voting-api:latest,goddchen/lol-champ-voting-api:${{ steps.git_tag.outputs.GIT_TAG }}
