@@ -67,11 +67,11 @@ app.post('/votings', function (req, res) {
 });
 
 app.get('/masteries', (req, res) => {
-    fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/Goddchen?api_key=${riotApiKey}`)
+    fetch(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Goddchen/EUW?api_key=${riotApiKey}`)
         .then(apiRes => apiRes.json())
-        .then(userInfo => userInfo.id)
+        .then(userInfo => userInfo.puuid)
         .then(encryptedSummonerId => 
-            fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${encryptedSummonerId}?api_key=${riotApiKey}`))
+            fetch(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${encryptedSummonerId}?api_key=${riotApiKey}`))
         .then(apiRes => apiRes.json())
         .then(masteries => {
             res.send(masteries.map((mastery => {
