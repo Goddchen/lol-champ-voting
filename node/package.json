@@ -9,7 +9,7 @@
   "author": "Goddchen",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.2",
+    "express": "^4.22.2",
     "express-basic-auth": "^1.2.1",
     "node": "file:",
     "node-fetch": "^2.6.7",
